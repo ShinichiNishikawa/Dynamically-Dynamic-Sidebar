@@ -59,10 +59,10 @@ function dds_alert_term_widget( $post ) {
 		$format = __( '<p class="dds-notice">The widget area for this post is <strong>%1$s</strong>, which is allocated to <strong>"%2$s"</strong> in <strong>"%3$s"</strong>.</p>', 'dynamically-dynamic-sidebar' );
 
 		printf(
-			esc_html( $format ),
-			esc_html( $widget_by_term["area-name"] ),
-			esc_html( $widget_by_term["term"]->name ),
-			esc_html( $widget_by_term["term"]->taxonomy )
+				$format,
+				esc_html( $widget_by_term["area-name"] ),
+				esc_html( $widget_by_term["term"]->name ),
+				esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
 		echo '<p class="dds-notice">You can override it by choosing another one here.</p>';
@@ -132,10 +132,10 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 
 		$format = '<strong>%1$s</strong><br>(from %2$s of %3$s )';
 		printf(
-			esc_html( $format ),
-			esc_html( $widget_by_term["area-name"] ),
-			esc_html( $widget_by_term["term"]->name ),
-			esc_html( $widget_by_term["term"]->taxonomy )
+				$format,
+				esc_html( $widget_by_term["area-name"] ),
+				esc_html( $widget_by_term["term"]->name ),
+				esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
 	}
