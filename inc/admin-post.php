@@ -126,7 +126,7 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 
 	if ( $widget_name ) {
 
-		echo esc_html( "<strong>{$widget_name}</strong>" );
+		echo '<strong>' . esc_html( $widget_name ) . '</strong>';
 
 	} elseif ( $widget_by_term = dds_get_widget_of_post_by_term( $post_id ) ) {
 
