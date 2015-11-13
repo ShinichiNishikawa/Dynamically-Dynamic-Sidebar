@@ -7,7 +7,7 @@ Stable tag: 0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin enables you to create unlimited custom sidebar/widget areas and switch existing areas. You can do this without touching your theme.
+Create unlimited custom sidebar/widget areas and switch existing areas depending on post, page, custom-post-type post, categories, tags and custom taxonomy terms. You can do this without touching your theme.
 
 == Description ==
 
