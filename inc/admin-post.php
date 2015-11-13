@@ -59,10 +59,10 @@ function dds_alert_term_widget( $post ) {
 		$format = __( '<p class="dds-notice">The widget area for this post is <strong>%1$s</strong>, which is allocated to <strong>"%2$s"</strong> in <strong>"%3$s"</strong>.</p>', 'dynamically-dynamic-sidebar' );
 
 		printf(
-			$format,
-			$widget_by_term["area-name"],
-			$widget_by_term["term"]->name,
-			$widget_by_term["term"]->taxonomy
+				$format,
+				esc_html( $widget_by_term["area-name"] ),
+				esc_html( $widget_by_term["term"]->name ),
+				esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
 		echo '<p class="dds-notice">You can override it by choosing another one here.</p>';
@@ -79,7 +79,7 @@ function dds_alert_term_widget( $post ) {
 add_action( 'save_post', 'dds_save_post_widget' );
 function dds_save_post_widget( $post_id ) {
 
-	if ( !$_POST["dds_post_metabox_nonce"] ) {
+	if ( empty( $_POST['dds_post_metabox_nonce'] ) ) {
 		return;
 	}
 
@@ -91,12 +91,12 @@ function dds_save_post_widget( $post_id ) {
 		return;
 	}
 
-	$posted = $_POST["dds_widget_area"];
-	if ( !isset( $posted ) ) {
+	if ( empty( $_POST['dds_widget_area'] ) ) {
 		return;
-	} else {
-		$posted = sanitize_title( $posted );
 	}
+
+	$posted = $_POST['dds_widget_area'];
+	$posted = sanitize_title( $posted );
 
 	update_post_meta( $post_id, 'dds_widget_area', $posted );
 
@@ -126,16 +126,16 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 
 	if ( $widget_name ) {
 
-		echo "<strong>{$widget_name}</strong>";
+		echo '<strong>' . esc_html( $widget_name ) . '</strong>';
 
 	} elseif ( $widget_by_term = dds_get_widget_of_post_by_term( $post_id ) ) {
 
 		$format = '<strong>%1$s</strong><br>(from %2$s of %3$s )';
 		printf(
-			$format,
-			$widget_by_term["area-name"],
-			$widget_by_term["term"]->name,
-			$widget_by_term["term"]->taxonomy
+				$format,
+				esc_html( $widget_by_term["area-name"] ),
+				esc_html( $widget_by_term["term"]->name ),
+				esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
 	}
