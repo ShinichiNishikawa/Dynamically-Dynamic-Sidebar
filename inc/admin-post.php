@@ -79,7 +79,7 @@ function dds_alert_term_widget( $post ) {
 add_action( 'save_post', 'dds_save_post_widget' );
 function dds_save_post_widget( $post_id ) {
 
-	if ( !$_POST["dds_post_metabox_nonce"] ) {
+	if ( empty( $_POST['dds_post_metabox_nonce'] ) ) {
 		return;
 	}
 
@@ -91,12 +91,12 @@ function dds_save_post_widget( $post_id ) {
 		return;
 	}
 
-	$posted = $_POST["dds_widget_area"];
-	if ( !isset( $posted ) ) {
+	if ( empty( $_POST['dds_widget_area'] ) ) {
 		return;
-	} else {
-		$posted = sanitize_title( $posted );
 	}
+
+	$posted = $_POST['dds_widget_area'];
+	$posted = sanitize_title( $posted );
 
 	update_post_meta( $post_id, 'dds_widget_area', $posted );
 
