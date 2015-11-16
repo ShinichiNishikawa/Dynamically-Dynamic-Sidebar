@@ -3,7 +3,7 @@ Contributors: ShinichiN
 Tags: widget, widget area, sidebar
 Requires at least: 4.4
 Tested up to: 3.4
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,12 +33,23 @@ If you only want to output your custom sidebar, put this code on where you want 
 
 `do_action( 'dynamically_dynamic_sidebar' );`
 
+[This Plugin published on GitHub.](https://github.com/ShinichiNishikawa/Dynamically-Dynamic-Sidebar/)
+
+ウィジェットエリアをいくつでも定義し、カテゴリやタグ、カスタム分類ごとに差し替えたり、投稿・ページ・カスタム投稿から使いたいサイドバーを指定したりすることができます。「スクリーンショット」のタブをごらんいただくと、イメージが湧きやすいと思います。
+
 
 == Installation ==
 
 1. Upload `dynamically-dynamic-sidebar` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Go to `/wp-admin/themes.php?page=dynamically-dynamic-sidebar`, which is located under `Appearance`
+
+== Screenshots ==
+
+1. First, you add your own dynamic sidebar areas. It's unlimited.
+2. Widget areas will appear on your admin panel. Put your widgets inside them.
+3. Choose which widget area you want to use for categories, tags and all the custom taxonomy terms.
+4. You can also choose specific sidebar area for each post, page and custom-post-type post.
 
 == Frequently Asked Questions ==
 
@@ -53,15 +64,12 @@ Choose the target widget area in admin panel. The admin page for this plugin is 
 You need to make sure that the call of dynamic_sidebar is properly wrapped with is_active_sidebar() conditional tag.
 
 `
-`if ( is_active_sidebar( 'sidebar-1' ) ) {
+if ( is_active_sidebar( 'sidebar-1' ) ) {
 	dynamic_sidebar( 'sidebar-1' );
-}`
+}
 `
 
 Or you can just output your dynamically created sidebar with `do_action( 'dynamically_dynamic_sidebar' );`, too.
-
-
-== Screenshots ==
 
 
 == Changelog ==
