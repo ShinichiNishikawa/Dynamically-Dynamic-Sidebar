@@ -9,10 +9,12 @@ Text Domain: dynamically-dynamic-sidebar
 Domain Path: /languages
 */
 
-require 'inc/admin-main.php';
-require 'inc/admin-post.php';
-require 'inc/admin-term.php';
-require 'inc/functions.php';
+define( 'DDS_PATH', plugin_dir_path( __FILE__ ) );
+
+require DDS_PATH . 'inc/admin-main.php';
+require DDS_PATH . 'inc/admin-post.php';
+require DDS_PATH . 'inc/admin-term.php';
+require DDS_PATH . 'inc/functions.php';
 
 add_action( 'widgets_init', 'dds_widgets_init' );
 function dds_widgets_init() {
