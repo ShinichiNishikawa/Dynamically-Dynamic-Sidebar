@@ -143,13 +143,30 @@ function dds_get_desired_widget_area() {
 
 	} elseif ( is_category() || is_tag() || is_tax() ) {
 
+		// ページ表示に使われたタクソノミのオブジェクト
 		$queried_obj = get_queried_object();
+
+		// のid
 		$term_id     = $queried_obj->term_id;
-		return get_term_meta( $term_id, 'dds_widget_area', true );
+
+		// に割当はあるか？
+		$widget_area = get_term_meta( $term_id, 'dds_widget_area', true );
+
+		// あればいいんだけど、
+		if ( $widget_area ) {
+			return $widget_area;
+		}
+
+		// ない場合には親をチェックせねば。
+		$ancestors = get_ancestors( $term_id, $queried_obj->taxonomy );
+		if ( is_array( $ancestors ) ) {
+			$widget_area_arr = dds_check_term_arrays_allocated_area( $ancestors );
+			$widget_area = $widget_area_arr["area-id"];
+			return $widget_area;
+		}
 
 	}
 
 	return false;
 
 }
-
