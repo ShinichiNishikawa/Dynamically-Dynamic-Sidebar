@@ -132,10 +132,10 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 
 		$format = '<strong>%1$s</strong><br>(from %2$s of %3$s )';
 		printf(
-				$format,
-				esc_html( $widget_by_term["area-name"] ),
-				esc_html( $widget_by_term["term"]->name ),
-				esc_html( $widget_by_term["term"]->taxonomy )
+			$format,
+			esc_html( $widget_by_term["area-name"] ),
+			esc_html( $widget_by_term["term"]->name ),
+			esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
 	}

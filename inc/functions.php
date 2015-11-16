@@ -17,14 +17,20 @@ function dds_get_taxonomies() {
 
 }
 
-// return: widget_id, widget_name and term object detemining the widget id.
-// Returns the FIRST FOUND widget area array.
+/**
+ * Returns an array of area FIRST FOUND.
+ * If no area is assigned, returns false.
+ *
+ * @param  int   $post          post id
+ * @return array $area_term_arr an array of widget_id, widget_name
+                                and term object detemining the widget id.
+ */
 function dds_get_widget_of_post_by_term( $post ) {
 
 	// マスター
-	$terms     = array();
-	$ancestors = array();
-	$return    = array();
+	$terms         = array();
+	$ancestors     = array();
+	$area_term_arr = array();
 
 	// 登録されているタクソノミ
 	$taxonomies = dds_get_taxonomies();
@@ -32,44 +38,56 @@ function dds_get_widget_of_post_by_term( $post ) {
 	// 各タクソノミのタームを取得
 	foreach ( $taxonomies as $taxonomy ) {
 
-		$temp = get_the_terms( $post, $taxonomy ); // タームを取得
+		$term_obj = get_the_terms( $post, $taxonomy ); // タームを取得
 
 		// タームに属していればマスターに入れる
-		if ( is_array( $temp ) ) {
-			$terms = array_merge( $terms, $temp );
+		if ( is_array( $term_obj ) ) {
+			$terms = array_merge( $terms, $term_obj );
 		}
 
 	}
 
 	// 直接のタームをチェック
-	$return = dds_check_term_arrays_allocated_area( $terms );
+	$area_term_arr = dds_check_term_arrays_allocated_area( $terms );
 
-	if ( $return ) {
-		return $return;
+	if ( $area_term_arr ) {
+		return $area_term_arr;
 	}
 
 	// タームの親をチェックしないと。。
 	foreach ( $terms as $t ) {
 
-		$temp = get_ancestors( $t->term_id, $t->taxonomy );
+		$ancestor_term_id_arr = get_ancestors( $t->term_id, $t->taxonomy );
 
-		if ( is_array( $temp ) ) {
-			$ancestors = array_merge( $ancestors, $temp );
+		if ( is_array( $ancestor_term_id_arr ) ) {
+			foreach ( $ancestor_term_id_arr as $a_id ) {
+				$term_obj = get_term_by( 'id', $a_id, $t->taxonomy );
+				$ancestors[] = $term_obj;
+			}
 		}
 
 	}
 
-	$return = dds_check_term_arrays_allocated_area( $ancestors );
+	$area_term_arr = dds_check_term_arrays_allocated_area( $ancestors );
 
-	if ( $return ) {
-		return $return;
+	if ( $area_term_arr ) {
+		return $area_term_arr;
 	} else {
 		return false;
 	}
 
 }
 
-// タームのオブジェクト／あるいはIDの配列を受けて、最初に返ってきたエリアを返す関数
+/**
+ * Given an array of term objects,
+ * returns FIRST FOUND widget area info.
+ *
+ *
+ *
+ * @param  int|object $terms         term id or term object
+ * @return array      $area_term_arr $area_term_arr an array of widget_id, widget_name
+                                and term object detemining the widget id.
+ */
 function dds_check_term_arrays_allocated_area( $terms ) {
 
 	if ( !isset( $terms ) || empty( $terms ) || !is_array( $terms ) ) {
@@ -92,9 +110,9 @@ function dds_check_term_arrays_allocated_area( $terms ) {
 			// ユーザ作成のエリア
 			$allocatable_widgets  = get_option( 'dds_sidebars' );
 
-			$return["area-id"]   = $area_id;
-			$return["area-name"] = $allocatable_widgets[$area_id];
-			$return["term"]      = $t;
+			$area_term_arr["area-id"]   = $area_id;
+			$area_term_arr["area-name"] = $allocatable_widgets[$area_id];
+			$area_term_arr["term"]      = $t;
 
 			break;
 
@@ -102,8 +120,8 @@ function dds_check_term_arrays_allocated_area( $terms ) {
 
 	}
 
-	if ( isset( $return ) && is_array( $return ) ) {
-		return $return;
+	if ( isset( $area_term_arr ) && is_array( $area_term_arr ) ) {
+		return $area_term_arr;
 	} else {
 		return false;
 	}
