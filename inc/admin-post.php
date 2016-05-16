@@ -91,7 +91,7 @@ function dds_save_post_widget( $post_id ) {
 		return;
 	}
 
-	if ( empty( $_POST['dds_widget_area'] ) ) {
+	if ( !isset( $_POST['dds_widget_area'] ) ) {
 		return;
 	}
 

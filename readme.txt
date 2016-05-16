@@ -2,8 +2,8 @@
 Contributors: ShinichiN
 Tags: widget, widget area, sidebar
 Requires at least: 4.4
-Tested up to: 3.4
-Stable tag: 0.3
+Tested up to: 4.5.2
+Stable tag: 0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,3 +79,8 @@ Or you can just output your dynamically created sidebar with `do_action( 'dynami
 
 = 0.3 =
 * Get terms ancestors' allocated widget area for posts.
+
+= 0.4 =
+* 2016/05/16
+* Bug fix. Now you can reset the dynamically chosen sidebar to default.
+
