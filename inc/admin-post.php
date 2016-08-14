@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Adds metabox to the post editor.
+ *
+ */
 add_action( 'add_meta_boxes', 'dds_add_meta_box' );
 function dds_add_meta_box() {
 
@@ -25,12 +29,17 @@ function dds_add_meta_box() {
 
 }
 
-// ポスト用のメタボックス
+/**
+ * The output of the metabox.
+ *
+ */
 function dds_post_meta_boxes( $post ) {
 
 	$registered = get_option( 'dds_sidebars' );
 	$the_area   = get_post_meta( $post->ID, 'dds_widget_area', true );
 
+	// This outputs an alert or an info in the contexts
+	// , where the assigned term has an sidebar widget area.
 	dds_alert_term_widget( $post );
 
 	?>
@@ -50,13 +59,20 @@ function dds_post_meta_boxes( $post ) {
 
 }
 
+/**
+ * Used in the meta box for a post,
+ * this function inform users that the
+ * post will have a custom widget area
+ * set by the term it's allocated.
+ *
+ */
 function dds_alert_term_widget( $post ) {
 
 	$widget_by_term = dds_get_widget_of_post_by_term( $post );
 
 	if ( $widget_by_term ) {
 
-		$format = __( '<p class="dds-notice">The widget area for this post is <strong>%1$s</strong>, which is allocated to <strong>"%2$s"</strong> in <strong>"%3$s"</strong>.</p>', 'dynamically-dynamic-sidebar' );
+		$format = __( '<p class="dds-notice">The widget area for this post is <strong>%1$s</strong>, which is allocated to the term <strong>"%2$s"</strong> of the taxonomy <strong>"%3$s"</strong>.</p>', 'dynamically-dynamic-sidebar' );
 
 		printf(
 				$format,
@@ -65,7 +81,7 @@ function dds_alert_term_widget( $post ) {
 				esc_html( $widget_by_term["term"]->taxonomy )
 		);
 
-		echo '<p class="dds-notice">You can override it by choosing another one here.</p>';
+		echo '<p class="dds-notice">You can override the sidebar of this post by choosing one here.</p>';
 
 	} else {
 
@@ -75,7 +91,10 @@ function dds_alert_term_widget( $post ) {
 
 }
 
-
+/**
+ * Save the data sent from the meta box.
+ *
+ */
 add_action( 'save_post', 'dds_save_post_widget' );
 function dds_save_post_widget( $post_id ) {
 
@@ -102,13 +121,20 @@ function dds_save_post_widget( $post_id ) {
 
 }
 
+
+/**
+ * In the list table of the posts/pages/custom post types,
+ * the widget areas will be shown.
+ *
+ */
+
 // posts and custom post types
 add_filter( 'manage_posts_columns',            'dds_add_posts_table_column'       );
 add_action( 'manage_posts_custom_column',      'dds_add_posts_table_cells', 10, 2 );
 
 // page
-add_filter( 'manage_page_posts_columns',       'dds_add_posts_table_column', 10);
-add_action( 'manage_page_posts_custom_column', 'dds_add_posts_table_cells', 10, 2);
+add_filter( 'manage_page_posts_columns',       'dds_add_posts_table_column', 10 );
+add_action( 'manage_page_posts_custom_column', 'dds_add_posts_table_cells',  10, 2 );
 
 function dds_add_posts_table_column( $columns ) {
 	$columns["dds_widget_column"] = "Sidebar";
@@ -121,6 +147,7 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 		return;
 	}
 
+	// When the area comes from the post
 	$widget_by_post = get_post_meta( $post_id, 'dds_widget_area', true );
 	$widget_name    = dds_get_widget_name_by_id($widget_by_post);
 
@@ -129,6 +156,7 @@ function dds_add_posts_table_cells( $column_name, $post_id ) {
 		echo '<strong>' . esc_html( $widget_name ) . '</strong>';
 
 	} elseif ( $widget_by_term = dds_get_widget_of_post_by_term( $post_id ) ) {
+		// when the area comes from a term.
 
 		$format = '<strong>%1$s</strong><br>(from %2$s of %3$s )';
 		printf(

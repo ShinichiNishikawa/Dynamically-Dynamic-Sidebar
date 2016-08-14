@@ -1,6 +1,9 @@
 <?php
 
-// ページとメニューの登録
+/**
+ * Register the admin page and the menu to it.
+ *
+ */
 add_action( 'admin_menu', 'dds_add_theme_page' );
 function dds_add_theme_page() {
 	add_theme_page(
@@ -12,40 +15,52 @@ function dds_add_theme_page() {
 	);
 }
 
-// 管理画面の出力
+/**
+ * Outputs the admin page.
+ * Processes the posted data.
+ *
+ */
 function dds_output_admin_panel() {
 
-	// post された
+	// Anything $_POST ed
 	if ( ! empty( $_POST ) ) {
 
-		// リファラをチェック
+		// Let's do check
 		check_admin_referer( 'dynamically-dynamic-sidebar' );
 
-		// ポストされてきたもの
+		// Posted values.
 		$posted_sidebars = $_POST["dds-widget-areas"];
 
-		$posted_sidebars = array_filter( $posted_sidebars, "strlen" ); // から削除
-		$posted_sidebars = array_unique( $posted_sidebars ); // 重複排除
-		$posted_sidebars = array_values( $posted_sidebars ); // キーがジャンプするのを防ぐ
-		$posted_sidebars = stripslashes_deep( $posted_sidebars ); // スラッシュ問題の解決
+		$posted_sidebars = array_filter( $posted_sidebars, "strlen" ); // Strip null, false, 0, and empty.
+		$posted_sidebars = array_unique( $posted_sidebars ); // Strip the doubled ones.
+		$posted_sidebars = array_values( $posted_sidebars ); // No jumps for the keys.
+		$posted_sidebars = stripslashes_deep( $posted_sidebars ); // Handler for the quotes escaping slashes.
 
 		$dds_sidebars = array();
 		foreach ( $posted_sidebars as $ps ) {
+
 			$key = sanitize_title( $ps );
 			$val = esc_attr( $ps );
 			$dds_sidebars[$key] = $val;
+
 		}
 
-		// 保存
+		// Save the data.
 		if ( isset( $dds_sidebars ) && is_array( $dds_sidebars ) ) {
+
 			update_option( 'dds_sidebars', $dds_sidebars );
+
 		}
 
 		$posted_target = $_POST["dds_target_widget_area"];
 		if ( $posted_target ) {
+
 			update_option( 'dds_target_widget_area', $posted_target );
+
 		} else {
+
 			delete_option( 'dds_target_widget_area' );
+
 		}
 
 	}
@@ -68,9 +83,9 @@ function dds_output_admin_panel() {
 						<?php
 							global $wp_registered_sidebars;
 
-							// here's the list of the widget areas.
+							// Here's the list of the widget areas.
 							$registered = $wp_registered_sidebars;
-							// we want only the ones registered by other theme(plugins)l
+							// We want only the ones registered by themes and plugins. Not the user custom sidebar by this very plugin.
 							foreach ( $dds_sidebars as $key => $val ) {
 								unset( $registered[$key] );
 							}
@@ -113,7 +128,7 @@ function dds_output_admin_panel() {
 		<tr>
 			<th scope="row"><?php _e( 'Add new', 'dynamically-dynamic-sidebar' ); ?></th>
 			<td>
-				<label for="dds-new"><?php _e( 'Add New', 'dynamically-dynamic-sidebar' ); ?> <input id="dds-new" type="text" name="dds-widget-areas[]" value=""></label>
+				<label for="dds-new"><input id="dds-new" type="text" name="dds-widget-areas[]" value=""></label>
 			</td>
 		</tr>
 	</tbody>

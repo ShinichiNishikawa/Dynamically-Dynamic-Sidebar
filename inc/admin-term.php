@@ -1,22 +1,30 @@
 <?php
 
 // 各タクソノミで出力と保存をするためにフックで登録
+/**
+ * Hooks the actions to display and save
+ * fields on the term list/edit screens.
+ *
+ */
 add_action( 'admin_init', 'dds_do_meta_for_all_taxonomies' );
 function dds_do_meta_for_all_taxonomies() {
 
 	$taxonomies = dds_get_taxonomies();
 
 	foreach ( $taxonomies as $t ) {
-		add_action( $t . '_add_form_fields', 'dds_term_add_meta_fields' );  // 新規追加時に出力
-		add_action( $t . '_edit_form',       'dds_term_edit_meta_fields' ); // 編集時に出力
-		add_action( 'created_' . $t, 'dds_update_term_meta' );              // 新規追加時に実行
-		add_action( 'edited_'  . $t, 'dds_update_term_meta' );              // 編集時に実行
+		add_action( $t . '_add_form_fields', 'dds_term_add_meta_fields'  ); // output on add screen
+		add_action( $t . '_edit_form',       'dds_term_edit_meta_fields' ); // output on edit screen
+		add_action( 'created_' . $t,         'dds_update_term_meta'      ); // fires on add screen
+		add_action( 'edited_'  . $t,         'dds_update_term_meta'      ); // fires on edit screen
 	}
 
 }
 
 
-// タームの編集画面にフォームを追加
+/**
+ * Output the form on edit screen.
+ *
+ */
 function dds_term_edit_meta_fields( $taxonomy ) {
 
 	// ユーザーが作成したウィジェットエリア
@@ -46,7 +54,10 @@ function dds_term_edit_meta_fields( $taxonomy ) {
 
 }
 
-// タームの新規追加画面にフォームを追加
+/**
+ * Output the form on add screen.
+ *
+ */
 function dds_term_add_meta_fields( $taxonomy ) {
 
 	// ユーザーが作成したウィジェットエリア
@@ -67,7 +78,10 @@ function dds_term_add_meta_fields( $taxonomy ) {
 }
 
 
-// タームメタの保存
+/**
+ * Save the term meta on save.
+ *
+ */
 function dds_update_term_meta( $term_id ) {
 
 	if ( !$_POST["dds_term_meta_nonce"] ) {
@@ -93,7 +107,10 @@ function dds_update_term_meta( $term_id ) {
 
 }
 
-// タームのリストに割り当てられたウィジェットを出す
+/**
+ * Add a column to the list table of the terms.
+ *
+ */
 add_action( 'admin_init', 'dds_fire_term_table_funcs' );
 function dds_fire_term_table_funcs() {
 
@@ -102,14 +119,24 @@ function dds_fire_term_table_funcs() {
 		add_filter( 'manage_edit-' . $taxonomy . '_columns',  'dds_add_term_table_column'       ); // ヘッダーを入れて定義
 		add_filter( 'manage_' . $taxonomy . '_custom_column', 'dds_add_term_table_cells', 10, 3 ); // 中身
 	}
+
 }
 
+/**
+ * Output the th
+ */
 function dds_add_term_table_column( $columns ) {
-	$columns["dds_widget_column"] = "Sidebar";
+
+	$columns["dds_widget_column"] = __( 'Sidebar', 'dynamically-dynamic-sidebar' );
 	return $columns;
+
 }
 
+/**
+ * Output the allocated area name in the cells.
+ */
 function dds_add_term_table_cells( $content, $column_name, $term_id ) {
+
 	if ( 'dds_widget_column' === $column_name ) {
 		$allocated_widget_key = get_term_meta( $term_id, 'dds_widget_area', true );
 		if ( $allocated_widget_key ) {
@@ -117,11 +144,7 @@ function dds_add_term_table_cells( $content, $column_name, $term_id ) {
 			$content = $allocatable_widgets[$allocated_widget_key];
 		}
 	}
+
 	return $content;
+
 }
-
-
-
-
-
-

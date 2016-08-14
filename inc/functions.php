@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Returns the taxonomies which are public.
+ *
+ */
 function dds_get_taxonomies() {
 
 	// コンテンツの分類に使うタクソノミに限定
@@ -18,7 +22,8 @@ function dds_get_taxonomies() {
 }
 
 /**
- * Returns an array of area FIRST FOUND.
+ * Given the post ID, looking into the terms of the post,
+ * returns an array of the area FIRST FOUND.
  * If no area is assigned, returns false.
  *
  * @param  int   $post          post id
@@ -27,18 +32,18 @@ function dds_get_taxonomies() {
  */
 function dds_get_widget_of_post_by_term( $post ) {
 
-	// マスター
+	// Init
 	$terms         = array();
 	$ancestors     = array();
 	$area_term_arr = array();
 
-	// 登録されているタクソノミ
+	// Getting all the taxonomies, which are public and has the UI.
 	$taxonomies = dds_get_taxonomies();
 
-	// 各タクソノミのタームを取得
+	// Loop through all the taxonomy terms.
 	foreach ( $taxonomies as $taxonomy ) {
 
-		$term_obj = get_the_terms( $post, $taxonomy ); // タームを取得
+		$term_obj = get_the_terms( $post, $taxonomy ); // Get "THE" terms.
 
 		// タームに属していればマスターに入れる
 		if ( is_array( $term_obj ) ) {
@@ -47,14 +52,14 @@ function dds_get_widget_of_post_by_term( $post ) {
 
 	}
 
-	// 直接のタームをチェック
+	// Pass the term array and get the widget area back.
 	$area_term_arr = dds_check_term_arrays_allocated_area( $terms );
 
 	if ( $area_term_arr ) {
 		return $area_term_arr;
 	}
 
-	// タームの親をチェックしないと。。
+	// Check the ancestors too.
 	foreach ( $terms as $t ) {
 
 		$ancestor_term_id_arr = get_ancestors( $t->term_id, $t->taxonomy );
@@ -68,6 +73,7 @@ function dds_get_widget_of_post_by_term( $post ) {
 
 	}
 
+	// Pass the parent term array and get the widget area back.
 	$area_term_arr = dds_check_term_arrays_allocated_area( $ancestors );
 
 	if ( $area_term_arr ) {
@@ -83,7 +89,6 @@ function dds_get_widget_of_post_by_term( $post ) {
  * returns FIRST FOUND widget area info.
  *
  *
- *
  * @param  int|object $terms         term id or term object
  * @return array      $area_term_arr $area_term_arr an array of widget_id, widget_name
                                 and term object detemining the widget id.
@@ -96,7 +101,7 @@ function dds_check_term_arrays_allocated_area( $terms ) {
 
 	foreach ( $terms as $t ) {
 
-		// object でも id でも id として扱う
+		// Let's handle ids only.
 		if ( is_object( $t ) ) {
 			$term_id = $t->term_id;
 		} elseif ( is_int( $t ) ) {
@@ -104,10 +109,10 @@ function dds_check_term_arrays_allocated_area( $terms ) {
 		}
 
 		$area_id = get_term_meta( $term_id, 'dds_widget_area', true );
-		// もしあれば、配列を作って、ループを抜ける
-		if ( $area_id ) {
 
-			// ユーザ作成のエリア
+		if ( $area_id ) { // if exists, create an array and escape from the loop.
+
+			// the array of the user custom areas.
 			$allocatable_widgets  = get_option( 'dds_sidebars' );
 
 			$area_term_arr["area-id"]   = $area_id;

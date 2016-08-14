@@ -12,9 +12,12 @@ Domain Path: /languages
 
 $dds_wp_version = $GLOBALS['wp_version'];
 
+// This plugin requires WP version greater than 4.4.
 if ( version_compare( (float)$dds_wp_version, '4.4', '<' ) ) {
+
 	add_action( 'admin_notices', 'dds_admin_error_notice' );
 	return false;
+
 } else {
 
 	define( 'DDS_PATH', plugin_dir_path( __FILE__ ) );
@@ -28,5 +31,5 @@ if ( version_compare( (float)$dds_wp_version, '4.4', '<' ) ) {
 }
 
 function dds_admin_error_notice() {
-	?><div class="error"><p><?php _e( '"Dynamically Dynamic Sidebar" plugin utilizes Term Meta API which was introduced in WordPress version 4.4. You need to upgrade your WordPress to activate the plugin.', 'dynamically-dynamic-sidebar' ); ?></p></div><?php
+	?><div class="error"><p><?php _e( '"Dynamically Dynamic Sidebar" plugin utilizes Term Meta API, which was introduced in WordPress version 4.4. You need to upgrade your WordPress to use this plugin.', 'dynamically-dynamic-sidebar' ); ?></p></div><?php
 }
