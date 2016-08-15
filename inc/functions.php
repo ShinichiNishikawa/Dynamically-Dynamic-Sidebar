@@ -21,6 +21,37 @@ function dds_get_taxonomies() {
 
 }
 
+
+
+/**
+ * Given the post ID, looking into the post type of the post,
+ * returns an array of the area FIRST FOUND.
+ * If no area is assigned, returns false.
+ *
+ * @param  int   $post          post id
+ * @return array $area_term_arr an array of widget_id, widget_name
+                                and term object detemining the widget id.
+ */
+function dds_get_widget_of_post_type( $post ) {
+
+	if ( ! $post ) {
+		return false;
+	}
+
+	$dds_post_type = $post->post_type;
+	$registered_posttypes_widgets = get_option( "dds_area_for_post_types" );
+	if ( isset( $registered_posttypes_widgets[$dds_post_type] ) ) {
+		$by_post_type = $registered_posttypes_widgets[$dds_post_type];
+	} else {
+		$by_post_type = false;
+	}
+
+	return $by_post_type;
+
+
+}
+
+
 /**
  * Given the post ID, looking into the terms of the post,
  * returns an array of the area FIRST FOUND.

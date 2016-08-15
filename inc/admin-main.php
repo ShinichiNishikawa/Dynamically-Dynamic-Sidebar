@@ -63,10 +63,24 @@ function dds_output_admin_panel() {
 
 		}
 
+		$posted_widget_area_for_post_types = $_POST["dds_area_for_post_types"];
+		if ( $posted_widget_area_for_post_types ) {
+
+			update_option( 'dds_area_for_post_types', $posted_widget_area_for_post_types );
+
+		} else {
+
+			delete_option( 'dds_area_for_post_types' );
+
+		}
+
 	}
 
 	$dds_sidebars = get_option( 'dds_sidebars' );
 	$dds_target   = get_option( 'dds_target_widget_area' );
+	$dds_a_f_pts  = get_option( 'dds_area_for_post_types' );
+
+
 ?>
 <div class="wrap">
 <h1><?php _e( 'Dynamic Widget Areas', 'dynamically-dynamic-sidebar' ); ?></h1>
@@ -75,7 +89,7 @@ function dds_output_admin_panel() {
 <table class="form-table">
 	<tbody>
 		<tr>
-			<th scope="row"><?php _e( 'Target widget area to switch', 'dynamically-dynamic-sidebar' ); ?></th>
+			<th scope="row"><?php _e( 'Target Widget Area', 'dynamically-dynamic-sidebar' ); ?></th>
 			<td>
 				<label for="dds_target_widget_area">
 					<select name="dds_target_widget_area" id="dds_target_widget_area">
@@ -104,10 +118,14 @@ function dds_output_admin_panel() {
 						?>
 					</select>
 				</label>
+				<p class="description">Choose the widget area to switch with custom widget areas.</p>
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><?php _e( 'Manage Widget Areas', 'dynamically-dynamic-sidebar' ); ?></th>
+			<th scope="row"><?php _e( 'Custom Widget Areas', 'dynamically-dynamic-sidebar' ); ?></th>
+			<td style="vertical-align: top;" width="25%">
+				<?php _e( 'Add new', 'dynamically-dynamic-sidebar' ); ?> <label for="dds-new"><input id="dds-new" type="text" name="dds-widget-areas[]" value=""></label>
+			</td>
 			<td>
 				<?php
 				if ( $dds_sidebars ) {
@@ -117,6 +135,7 @@ function dds_output_admin_panel() {
 						<?php
 					}
 					?>
+					<p class="description">Add and edit the name of custom widget areas.</p>
 					<p class="description"><?php _e( 'Make the field blank to delete your areas.', 'dynamically-dynamic-sidebar' ); ?></p>
 					<?php
 				} else {
@@ -126,14 +145,58 @@ function dds_output_admin_panel() {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row"><?php _e( 'Add new', 'dynamically-dynamic-sidebar' ); ?></th>
+			<th scope="row"><?php _e( 'Post type Widget Areas', 'dynamically-dynamic-sidebar' ); ?></th>
 			<td>
-				<label for="dds-new"><input id="dds-new" type="text" name="dds-widget-areas[]" value=""></label>
+				<?php
+					// https://developer.wordpress.org/reference/functions/get_post_types/
+					$args = array(
+						'public' => true,
+					);
+					$registered_post_types = get_post_types(
+						$args,
+						"object",
+						"and"
+					);
+					unset( $registered_post_types["attachment"] );
+
+					foreach ( $registered_post_types as $key => $val ) {
+						?>
+						<ul>
+							<li>
+								<label for="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]">
+									<?php echo esc_attr( $val->label ); ?>
+									<select name="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]" id="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]">
+										<option value="dds-default"><?php _e( 'Default', 'dynamically-dynamic-sidebar' ); ?></option>
+										<?php foreach ( $dds_sidebars as $dds_key => $dds_val ) {
+											?>
+											<option
+												value="<?php echo esc_attr( $dds_key ); ?>"
+												<?php
+												if ( isset($dds_a_f_pts[$key]) && esc_attr( $dds_a_f_pts[$key] ) === $dds_key ) {
+												?>
+													selected="selected"
+												<?php
+												}
+												?>
+
+
+											><?php echo esc_html( $dds_val ); ?></option>
+											<?php
+										} ?>
+									</select>
+								</label>
+							</li>
+						</ul>
+						<?php
+					}
+
+				?>
+				<p class="description">Assign widget areas to your post types.</p>
 			</td>
 		</tr>
 	</tbody>
 </table>
-<p class="submit"><input type="submit" id="submit" class="button button-primary" value="<?php _e( 'Save dynamically dynamic widget settings.', 'dynamically-dynamic-sidebar' ); ?>" /></p>
+<p class="submit"><input type="submit" id="submit" class="button button-primary" value="<?php _e( 'Save settings.', 'dynamically-dynamic-sidebar' ); ?>" /></p>
 <?php wp_nonce_field( "dynamically-dynamic-sidebar" ); ?>
 </form>
 </div>

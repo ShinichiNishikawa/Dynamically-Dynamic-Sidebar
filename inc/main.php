@@ -47,6 +47,7 @@ function dds_widgets_init() {
 add_filter( 'is_active_sidebar', 'dds_switch_sidebar', 10, 2 );
 function dds_switch_sidebar( $is_active_sidebar, $index ) {
 
+
 	// Retrieve the desired area from post type, term, or post.
 	$switch = dds_get_desired_widget_area();
 
@@ -146,6 +147,7 @@ function dynamically_dynamic_sidebar() {
 
 		// If anything goes wrong, the default.
 		dynamic_sidebar( 1 );
+
 	}
 
 }
@@ -189,12 +191,17 @@ function dds_get_desired_widget_area() {
 			return $widget_area;
 		}
 
-		// 1-2. get the area id set to the term of the ancestor of the term.
+		// 1-2. get the area id set to the term or the ancestor of the term.
 		$by_term = dds_get_widget_of_post_by_term( $post );
 		if ( $by_term ) {
 			return $by_term["area-id"];
 		}
 
+		// 1-3. get the area id set to the post type of the post shown now.
+		$by_post_type = dds_get_widget_of_post_type( $post );
+		if ( $by_post_type ) {
+			return $by_post_type;
+		}
 
 	} elseif ( is_category() || is_tag() || is_tax() ) {
 
