@@ -7,8 +7,8 @@
 add_action( 'admin_menu', 'dds_add_theme_page' );
 function dds_add_theme_page() {
 	add_theme_page(
-		__( 'Dynamically dinamic sidebar', 'dynamically-dynamic-sidebar' ),
-		__( 'Dynamically dinamic sidebar', 'dynamically-dynamic-sidebar' ),
+		__( 'Dynamically dynamic sidebar', 'dynamically-dynamic-sidebar' ),
+		__( 'Dynamically dynamic sidebar', 'dynamically-dynamic-sidebar' ),
 		'edit_theme_options',
 		'dynamically-dynamic-sidebar',
 		'dds_output_admin_panel'
@@ -91,6 +91,8 @@ function dds_output_admin_panel() {
 		<tr>
 			<th scope="row"><?php _e( 'Target Widget Area', 'dynamically-dynamic-sidebar' ); ?></th>
 			<td>
+				<p class="description">Choose the widget area to switch with custom widget areas.</p>
+				<br />
 				<label for="dds_target_widget_area">
 					<select name="dds_target_widget_area" id="dds_target_widget_area">
 						<option value=""><?php _e( 'Choose the target widget area to switch.', 'dynamically-dynamic-sidebar' ); ?></option>
@@ -118,7 +120,6 @@ function dds_output_admin_panel() {
 						?>
 					</select>
 				</label>
-				<p class="description">Choose the widget area to switch with custom widget areas.</p>
 			</td>
 		</tr>
 		<tr>
@@ -129,15 +130,16 @@ function dds_output_admin_panel() {
 			<td>
 				<?php
 				if ( $dds_sidebars ) {
+					?>
+					<p class="description">Add and edit the name of custom widget areas.</p>
+					<p class="description"><?php _e( 'Make the field blank to delete your areas.', 'dynamically-dynamic-sidebar' ); ?></p>
+					<br />
+					<?php
 					foreach ( $dds_sidebars as $key => $val ) {
 						?>
 						<input type="text" name="dds-widget-areas[]" value="<?php echo esc_attr( $val ); ?>"><br />
 						<?php
 					}
-					?>
-					<p class="description">Add and edit the name of custom widget areas.</p>
-					<p class="description"><?php _e( 'Make the field blank to delete your areas.', 'dynamically-dynamic-sidebar' ); ?></p>
-					<?php
 				} else {
 					_e( 'There\'s no dynamic widget areas yet.', 'dynamically-dynamic-sidebar' );
 				}
@@ -147,6 +149,8 @@ function dds_output_admin_panel() {
 		<tr>
 			<th scope="row"><?php _e( 'Post type Widget Areas', 'dynamically-dynamic-sidebar' ); ?></th>
 			<td>
+				<p class="description">Assign widget areas to your post types.</p>
+				<br />
 				<?php
 					// https://developer.wordpress.org/reference/functions/get_post_types/
 					$args = array(
@@ -159,39 +163,40 @@ function dds_output_admin_panel() {
 					);
 					unset( $registered_post_types["attachment"] );
 
+					echo "<table>";
+
 					foreach ( $registered_post_types as $key => $val ) {
 						?>
-						<ul>
-							<li>
-								<label for="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]">
-									<?php echo esc_attr( $val->label ); ?>
-									<select name="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]" id="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]">
-										<option value="dds-default"><?php _e( 'Default', 'dynamically-dynamic-sidebar' ); ?></option>
-										<?php foreach ( $dds_sidebars as $dds_key => $dds_val ) {
-											?>
-											<option
-												value="<?php echo esc_attr( $dds_key ); ?>"
-												<?php
-												if ( isset($dds_a_f_pts[$key]) && esc_attr( $dds_a_f_pts[$key] ) === $dds_key ) {
-												?>
-													selected="selected"
-												<?php
-												}
-												?>
-
-
-											><?php echo esc_html( $dds_val ); ?></option>
+						<tr>
+							<th>
+								<label for="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]"><?php echo esc_attr( $val->label ); ?></label>
+							</th>
+							<td>
+								<select name="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]" id="dds_area_for_post_types[<?php echo esc_attr( $key ); ?>]">
+									<option value="dds-default"><?php _e( 'Default', 'dynamically-dynamic-sidebar' ); ?></option>
+									<?php foreach ( $dds_sidebars as $dds_key => $dds_val ) {
+										?>
+										<option
+											value="<?php echo esc_attr( $dds_key ); ?>"
 											<?php
-										} ?>
-									</select>
-								</label>
-							</li>
-						</ul>
+											if ( isset($dds_a_f_pts[$key]) && esc_attr( $dds_a_f_pts[$key] ) === $dds_key ) {
+											?>
+												selected="selected"
+											<?php
+											}
+											?>
+
+
+										><?php echo esc_html( $dds_val ); ?></option>
+										<?php
+									} ?>
+								</select>
+							</td>
+						</tr>
 						<?php
 					}
-
+					echo "</table>";
 				?>
-				<p class="description">Assign widget areas to your post types.</p>
 			</td>
 		</tr>
 	</tbody>
