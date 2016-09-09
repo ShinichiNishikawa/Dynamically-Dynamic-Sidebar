@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Dynamically Dynamic Sidebar
-Version: 0.6
+Version: 0.7
 Description: This plugin enables you to create unlimited widget area and use them for posts, pages, categories, tags and so on.
 Author: Shinichi Nishikawa
 Author URI: http://nobil.cc
