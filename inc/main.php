@@ -227,6 +227,18 @@ function dds_get_desired_widget_area() {
 			return $widget_area;
 		}
 
+	} elseif ( is_post_type_archive() ) {
+
+		$post_type = get_post_type();
+
+		$widget_area_arr = get_option( "dds_area_for_post_types" );
+
+		$widget_area = $widget_area_arr[$post_type];
+
+		if ( "dds-default" !== $widget_area ) {
+			return $widget_area;
+		}
+
 	}
 
 	return false;

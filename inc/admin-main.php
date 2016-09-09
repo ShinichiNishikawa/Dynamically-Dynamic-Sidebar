@@ -185,8 +185,6 @@ function dds_output_admin_panel() {
 											<?php
 											}
 											?>
-
-
 										><?php echo esc_html( $dds_val ); ?></option>
 										<?php
 									} ?>
